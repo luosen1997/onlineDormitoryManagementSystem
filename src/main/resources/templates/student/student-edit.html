@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="head::header" ></head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                	<input type="hidden" name="ids" th:value="${usersId}" autocomplete="off"  class="layui-input">
+                    <div class="layui-inline layui-show-xs-block" style="width: 500px">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>宿舍楼
+                        </label>
+                        <div class="layui-input-inline">
+                            <select name="dorm_towerId" id="dorm_towerId" lay-filter="myselect">
+                                <option th:each="item : ${order_towerList}" th:value="${item.id}">[[${item.name}]]</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="layui-inline layui-show-xs-block" style="width: 500px">
+                        <label>
+                           宿舍
+                        </label>
+                        <div class="layui-input-inline">
+                            <select name="dormId" id="dormId" lay-filter="myselect2">
+                            </select>
+                        </div>
+                    </div>
+                  <div class="layui-form-item">
+                      <label class="layui-form-label"></label>
+                      <button  class="layui-btn" lay-filter="add" lay-submit="">确定</button>
+                  </div>
+              </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+              	//监听提交
+                form.on('submit(add)',
+                function(data) {
+                    $.ajax({
+                    	url:"editinsert",
+                    	data:{
+                            usersId:data.field.ids,
+                            dorm_towerId:data.field.dorm_towerId,
+                            dormId:data.field.dormId
+                    	},
+                    	success:function(res){
+                    		if(res.code == 0){
+                    			layer.msg('已添加!',{icon:1,time:1000},function(){
+		              				// 获得frame索引
+			                        var index = parent.layer.getFrameIndex(window.name);
+			                        //关闭当前frame
+			                        parent.layer.close(index);
+			                        parent.location.reload();
+	              				});
+                    		}else{
+	              				layer.msg(res.msg,{icon:5,time:1000});
+	              			}
+                    	},
+	              		error:function(err){
+	              			layer.msg('添加失败!',{icon:5,time:1000});
+	              		}
+                    	
+                    })
+                    return false;
+                });
+
+                form.on('select(myselect)',function(data) {
+                        var areaId=data.value;
+                        $.ajax({
+                            url:"findDorm",
+                            data:{
+                                id:areaId
+                            },
+                            success:function(res){
+                                if(res.code == 0) {
+                                    $("#dormId").html("");
+                                    $.each(res.dormList, function (i, item) {
+                                        var option1 = $("<option>").val(item.id).text(item.name);
+                                        $("#dormId").append(option1);
+                                        form.render('select');
+                                    });
+                                    $("#dormId").get(0).selectedIndex = 0;
+                                }else{
+                                    layer.msg(res.msg,{icon:5,time:1000});
+                                }
+                            },
+                            error:function(){
+                                layer.msg(res.msg,{icon:5,time:1000});
+                            }
+                        })
+                        return false;
+                    });
+        });
+       	</script>
+    </body>
+
+</html>

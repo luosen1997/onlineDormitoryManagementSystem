@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.mapper.RepairsMapper">
+    <!--查询公告列表-->
+    <select id="selAllRepairs" parameterType="Map" resultType="Repairs">
+        SELECT * FROM repairs r left join users u on u.id=r.user_id
+        <where> 1= 1
+            <if test="cause != null and cause != ''">
+                AND  r.cause LIKE CONCAT("%",#{cause},"%")
+            </if>
+            <if test="article != null and article!=''">
+                AND  r.article LIKE CONCAT("%",#{article},"%")
+            </if>
+            <if test="state != null and state!=''">
+                AND  r.state LIKE CONCAT("%",#{state},"%")
+            </if>
+            <if test="user_id != null and user_id!=''">
+                AND  r.user_id = #{user_id}
+            </if>
+            <if test="begin_date!=null and begin_date!=''">
+                and DATE_FORMAT(r.create_time, '%Y-%m-%d') &gt;= #{begin_date}
+            </if>
+
+            <if test="end_date!=null and end_date!=''">
+                and DATE_FORMAT(r.create_time, '%Y-%m-%d') &lt;= #{end_date}
+            </if>
+        </where>
+        ORDER BY r.create_time DESC
+        <if test = "begin !=null and last !=null" >
+            LIMIT #{begin},#{last}
+        </if>
+    </select>
+    <!--添加报修-->
+    <insert id="addRepairs" parameterType="Repairs" >
+        INSERT INTO repairs(cause,article,user_id,create_time)
+        VALUES (#{cause},#{article},#{user_id},now())
+    </insert>
+    <!--通过id查询单挑数据-->
+    <select id="selRepairsId" parameterType="int" resultType="Repairs">
+        SELECT * FROM repairs where id=#{id}
+    </select>
+
+    <update id="updRepairs" parameterType="Repairs">
+        UPDATE repairs
+        <set >
+            <if test="cause != null and cause != '' " >
+                cause = #{cause},
+            </if>
+            <if test="article != null and article != '' " >
+                article = #{article},
+            </if>
+            <if test="state != null and state != '' " >
+                state = #{state},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delRepairs" parameterType="int">
+        DELETE FROM repairs WHERE id=#{id}
+    </delete>
+</mapper>

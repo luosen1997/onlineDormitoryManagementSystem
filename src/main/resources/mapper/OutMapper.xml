@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.mapper.OutMapper">
+    <!--查询迁出记录列表-->
+    <select id="selAllOut" parameterType="Map" resultType="Out">
+       select * from `out`
+	    <where> 1= 1
+			<if test="dormname != null">
+				AND  dormname LIKE CONCAT("%",#{dormname},"%")
+			</if>
+			<if test="dorm_towername != null">
+				AND  dorm_towername LIKE CONCAT("%",#{dorm_towername},"%")
+			</if>
+		</where>
+    </select>
+    <!--添加迁出记录-->
+    <insert id="addOut" parameterType="Out" >
+        INSERT INTO `out`(name,dormname,dorm_towername,create_time)
+        VALUES (#{name},#{dormname},#{dorm_towername},now())
+    </insert>
+    <!-- 删除 -->
+    <delete id="delOut" parameterType="int">
+        DELETE FROM `out` WHERE id=#{id}
+    </delete>
+
+
+
+</mapper>

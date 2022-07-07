@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.net.mapper.UsersMapper" >
+
+  <!-- 关键字模糊查询用户 -->
+  <select id="selAll" resultType="Users" parameterType="java.lang.Integer">
+      SELECT
+	  u.*,dt.id dorm_towerId
+    FROM
+        users u
+    LEFT JOIN dorm_tower dt ON  u.id= dt.userId
+	WHERE
+		1 = 1
+      and u.role=1
+  	</select>
+	<!-- 查询相同账户的用户 -->
+  <select id="findUserByName" parameterType="String" resultType="Users">
+      SELECT  * FROM users WHERE name = #{name} and state='1'
+  </select>
+  <!-- 用户登录 -->
+  <select id="login" parameterType="Users" resultType="Users">
+      SELECT  * FROM users WHERE name=#{name} and pwd = #{pwd} and state='1'
+  </select>
+  <select id="findteacher" resultType="Users">
+      SELECT  * FROM users WHERE role=2 and state='1'
+  </select>
+
+  <select id="selectByPrimaryKey" resultType="Users" parameterType="java.lang.Integer" >
+    select 
+    *
+    from users
+    where id = #{id} and state='1'
+  </select>
+
+  <select id="selAllFindById" resultType="Users" parameterType="Users" >
+    select
+    *
+    from users
+    where id = #{id} and state='1'
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from users
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.net.entity.Transfer" >
+    insert into users (id, name,nickname, pwd,
+      role, tel,
+      email, sex, create_time
+      )
+    values (#{id}, #{name},#{nickname}, #{pwd},
+      #{role},  #{tel},
+      #{email}, #{sex},now()
+      )
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.net.entity.Users" >
+    insert into users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null and id != ''" >
+        id,
+      </if>
+      <if test="name != null and name != '' " >
+        name,
+      </if>
+      <if test="pwd != null and pwd != ''" >
+        pwd,
+      </if>
+      <if test="role != null and role != ''" >
+        role,
+      </if>
+      <if test="nickname != null and nickname != ''" >
+        nickname,
+      </if>
+      <if test="tel != null and tel != ''" >
+        tel,
+      </if>
+      <if test="email != null and email != ''" >
+        email,
+      </if>
+      <if test="sex != null and sex != ''" >
+        sex,
+      </if>
+      <if test="academy != null and academy != ''" >
+        academy,
+      </if>
+      <if test="class_grade != null and class_grade != ''" >
+        class_grade,
+      </if>
+      <if test="birthplace != null and birthplace != ''" >
+        birthplace,
+      </if>
+      <if test="photo != null and photo != ''" >
+        photo,
+      </if>
+      <if test="smoke != null and smoke!= ''" >
+        smoke,
+      </if>
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null and id!=''" >
+        #{id},
+      </if>
+      <if test="name != null and name!=''" >
+        #{name},
+      </if>
+      <if test="pwd != null and pwd!=''" >
+        #{pwd},
+      </if>
+      <if test="role != null and role!=''" >
+        #{role},
+      </if>
+      <if test="nickname != null and nickname!=''" >
+        #{nickname},
+      </if>
+      <if test="tel != null and tel !=''" >
+        #{tel},
+      </if>
+      <if test="email != null and email!=''" >
+        #{email},
+      </if>
+      <if test="sex != null and sex!=''" >
+        #{sex},
+      </if>
+      <if test="academy != null and academy!=''" >
+        #{academy},
+      </if>
+      <if test="class_grade != null and class_grade!=''" >
+        #{class_grade},
+      </if>
+      <if test="birthplace != null and birthplace!=''" >
+        #{birthplace},
+      </if>
+      <if test="photo != null and photo != ''" >
+        #{photo},
+      </if>
+      <if test="smoke != null and smoke!=''" >
+        #{smoke},
+      </if>
+        now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.net.entity.Users" >
+    update users
+    <set>
+      <if test="name != null and name!=''" >
+        name = #{name},
+      </if>
+      <if test="pwd != null and pwd!=''" >
+        pwd = #{pwd},
+      </if>
+      <if test="role != null and role!=''" >
+        role = #{role},
+      </if>
+      <if test="nickname != null and nickname!=''">
+        nickname = #{nickname},
+      </if>
+      <if test="tel != null and tel!=''" >
+        tel = #{tel},
+      </if>
+      <if test="email != null and email!=''" >
+        email = #{email},
+      </if>
+      <if test="sex != null and sex!=''" >
+        sex = #{sex},
+      </if>
+      <if test="academy != null and academy!=''" >
+        academy = #{academy},
+      </if>
+      <if test="class_grade != null and class_grade!=''" >
+        class_grade = #{class_grade},
+      </if>
+      <if test="birthplace != null and birthplace != ''" >
+        birthplace = #{birthplace},
+      </if>
+      <if test="photo != null and photo != ''" >
+        photo = #{photo},
+      </if>
+      <if test="smoke != null and smoke!=''" >
+        smoke = #{smoke},
+      </if>
+      <if test="create_time != null and create_time!=''" >
+        create_time = #{create_time},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.net.entity.Users" >
+    update users
+    set name = #{name},
+      pwd = #{pwd},
+      role = #{role},
+      nickname = #{nickname},
+      tel = #{tel},
+      email = #{email},
+      sex = #{sex},
+      create_time = #{create_time}
+    where id = #{id}
+  </update>
+
+  <insert id="insertAllot" parameterType="com.net.entity.Dorm_usersId" >
+    insert into dorm_usersId (id,dormId,usersId)
+    values (#{id},#{dormId},#{usersId})
+  </insert>
+
+
+  <!-- 关键字模糊查询用户 -->
+  <select id="selAllFind" parameterType="Map" resultType="Users">
+    SELECT
+    u.*,dm.id dormId,dm.name dormname,dm.number dormnumber,dt.id dorm_towerId,dt.name dorm_towername,dt.number dorm_towernumber,d.id dorm_userId,e.id usId,ex.id otherId,e.agree
+    FROM
+    users u
+    LEFT JOIN dorm_usersid d ON u.id = d.usersId
+    LEFT JOIN dorm dm ON d.dormId = dm.id
+    LEFT JOIN dorm_tower dt ON d.dorm_towerId = dt.id
+    left join exchange e on e.usId=u.id and e.state = '0' and e.agree != '2'
+    left join exchange ex on ex.usId=u.id and ex.state = '0' and ex.agree != '2'
+    WHERE
+    1 = 1
+    <if test="like != null and like != ''">
+      and (
+      u.name LIKE CONCAT("%",#{like},"%")
+      OR u.nickname LIKE CONCAT("%",#{like},"%")
+      OR u.tel LIKE CONCAT("%",#{like},"%")
+      OR u.email LIKE CONCAT("%",#{like},"%")
+      OR u.class_grade LIKE CONCAT("%",#{like},"%")
+      OR u.birthplace LIKE CONCAT("%",#{like},"%")
+      )
+    </if>
+    <if test="dormname != null and dormname != ''">
+      and dm.name LIKE CONCAT("%",#{dormname},"%")
+    </if>
+    <if test="dorm_towername != null and dorm_towername != '' ">
+      and dt.name like CONCAT("%",#{dorm_towername},"%")
+    </if>
+    <if test="role!=null and role!=''">
+      and u.role = #{role}
+    </if>
+    <if test="id!=null and id!=''">
+      and u.id = #{id}
+    </if>
+    <if test="sex!=null and sex!=''">
+      and u.sex = #{sex}
+    </if>
+    <if test="smoke!=null and smoke!=''">
+      and u.smoke = #{smoke}
+    </if>
+    <if test="begin_date!=null and begin_date!=''">
+      and DATE_FORMAT(u.create_time, '%Y-%m-%d') &gt;= #{begin_date}
+    </if>
+    <if test="end_date!=null and end_date!=''">
+      and DATE_FORMAT(u.create_time, '%Y-%m-%d') &lt;= #{end_date}
+    </if>
+    <if test="dormId !=null and dormId !='' and dormId == 1 ">
+      and dm.id is not null
+    </if>
+    <if test="dormId !=null and dormId !='' and dormId == 2 ">
+      and dm.id is null
+    </if>
+    ORDER BY u.id DESC
+    <if test="begin!=null and last!=null">
+      LIMIT #{begin},#{last}
+    </if>
+  </select>
+
+  <select id="finduserxuesheng" parameterType="Integer" resultType="com.net.entity.Users">
+    select * from users where role=2 and state='1'
+  </select>
+</mapper>

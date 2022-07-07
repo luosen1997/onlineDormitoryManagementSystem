@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.mapper.Order_towerMapper">
+    <!--查询公告列表-->
+    <select id="selAllOrder_tower" parameterType="Map" resultType="Order_tower">
+        SELECT d.*,u.name username FROM dorm_tower d left join users u on d.userId=u.id
+        <where> 1= 1
+            <if test="name != null">
+                AND  name LIKE CONCAT("%",#{name},"%")
+            </if>
+            <if test="number != null">
+                AND  number LIKE CONCAT("%",#{number},"%")
+            </if>
+            <if test="begin_date!=null and begin_date!=''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d') &gt;= #{begin_date}
+            </if>
+            <if test="end_date!=null and end_date!=''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d') &lt;= #{end_date}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        <if test = "begin !=null and last !=null" >
+            LIMIT #{begin},#{last}
+        </if>
+    </select>
+    <!--添加公告-->
+    <insert id="addOrder_tower" parameterType="Order_tower" >
+        INSERT INTO dorm_tower(name,number,userId,create_time)
+        VALUES (#{name},#{number},#{userId},now())
+    </insert>
+    <!--通过id查询单挑数据-->
+    <select id="selOrder_towerId" parameterType="int" resultType="Order_tower">
+        SELECT * FROM dorm_tower where id=#{id}
+    </select>
+
+    <!--通过用户id查询单挑数据-->
+    <select id="selOrder_towerUserId" parameterType="int" resultType="Order_tower">
+        SELECT * FROM dorm_tower where userId=#{userId}
+    </select>
+
+    <update id="updOrder_tower" parameterType="Order_tower">
+        UPDATE dorm_tower
+        <set >
+            <if test="name != null and name != '' " >
+                name = #{name},
+            </if>
+            <if test="number != null and number != '' " >
+                number = #{number},
+            </if>
+            <if test="score != null and score != '' " >
+                score = #{score},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delOrder_tower" parameterType="int">
+        DELETE FROM dorm_tower WHERE id=#{id}
+    </delete>
+
+    <!--通过name查询单挑数据-->
+    <select id="selOrder_towerByName" parameterType="java.lang.String" resultType="Order_tower">
+        SELECT * FROM dorm_tower
+        where
+        name = #{name}
+    </select>
+
+    <select id="selOrder_towerByNumber" parameterType="java.lang.String" resultType="Order_tower">
+        SELECT * FROM dorm_tower
+        where
+        number = #{number}
+    </select>
+
+
+    <!--查询-->
+    <select id="findOrder_tower" resultType="Order_tower">
+        SELECT * FROM dorm_tower
+    </select>
+</mapper>

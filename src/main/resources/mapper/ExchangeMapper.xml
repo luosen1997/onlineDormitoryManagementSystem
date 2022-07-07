@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.mapper.ExchangeMapper">
+    <!--查询公告列表-->
+    <select id="selExchange" parameterType="Map" resultType="Exchange">
+        SELECT e.*,u.name nickname,us.name nicknames FROM exchange e left join users u on e.usId=u.id left join users us on e.otherId=us.id
+        <where> 1= 1
+            <if test="usId != null and usId != ''">
+                AND  e.usId = #{usId} or e.otherId = #{usId}
+            </if>
+            <if test="agree != null and agree != ''">
+                AND  e.agree = #{agree}
+            </if>
+            <if test="state != null and state != ''">
+                AND  e.state = #{state}
+            </if>
+            <if test="begin_date!=null and begin_date!=''">
+                and DATE_FORMAT(e.create_time, '%Y-%m-%d') &gt;= #{begin_date}
+            </if>
+            <if test="end_date!=null and end_date!=''">
+                and DATE_FORMAT(e.create_time, '%Y-%m-%d') &lt;= #{end_date}
+            </if>
+        </where>
+        ORDER BY e.create_time DESC
+        <if test = "begin !=null and last !=null" >
+            LIMIT #{begin},#{last}
+        </if>
+    </select>
+
+    <update id="updExchange" parameterType="Exchange">
+        UPDATE exchange
+        <set>
+            <if test="state != null and state != '' " >
+                state = #{state},
+            </if>
+            <if test="agree != null and agree != '' " >
+                agree = #{agree},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delExchange" parameterType="int">
+        DELETE FROM Exchange WHERE id=#{id}
+    </delete>
+    <delete id="delExchangeByUsId" parameterType="int">
+        DELETE FROM Exchange WHERE usId=#{usId}
+    </delete>
+    <delete id="delExchangeByOtherId" parameterType="int">
+        DELETE FROM Exchange WHERE otherId=#{otherId}
+    </delete>
+    <!--添加-->
+    <insert id="addExchange" parameterType="Exchange" >
+        INSERT INTO exchange(usId,create_time,otherId)
+        VALUES (#{usId},now(),#{otherId})
+    </insert>
+
+</mapper>

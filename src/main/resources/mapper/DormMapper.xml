@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.mapper.DormMapper">
+    <!--查询公告列表-->
+    <select id="selAllDorm" parameterType="Map" resultType="Dorm">
+        SELECT d.*,dt.name dorm_towername FROM dorm d left join dorm_tower dt on d.dorm_towerId=dt.id
+        <where> 1= 1
+            <if test="name != null and name!=''">
+                AND  d.name LIKE CONCAT("%",#{name},"%")
+            </if>
+            <if test="number != null and number != ''">
+                AND  d.number LIKE CONCAT("%",#{number},"%")
+            </if>
+            <if test="dorm_towerId != null and dorm_towerId != ''">
+                AND  d.dorm_towerId = #{dorm_towerId}
+            </if>
+            <if test="begin_date!=null and begin_date!=''">
+                and DATE_FORMAT(d.create_time, '%Y-%m-%d') &gt;= #{begin_date}
+            </if>
+            <if test="end_date!=null and end_date!=''">
+                and DATE_FORMAT(d.create_time, '%Y-%m-%d') &lt;= #{end_date}
+            </if>
+        </where>
+        ORDER BY d.create_time DESC
+        <if test = "begin !=null and last !=null" >
+            LIMIT #{begin},#{last}
+        </if>
+    </select>
+    <!--添加公告-->
+    <insert id="addDorm" parameterType="Dorm" >
+        INSERT INTO dorm(name,number,people_count,dorm_towerId,create_time)
+        VALUES (#{name},#{number},#{people_count},#{dorm_towerId},now())
+    </insert>
+    <!--通过id查询单挑数据-->
+    <select id="selDormId" parameterType="int" resultType="Dorm">
+        SELECT * FROM dorm where id=#{id}
+    </select>
+
+    <update id="updDorm" parameterType="Dorm">
+        UPDATE dorm
+        <set >
+            <if test="name != null and name != '' " >
+                name = #{name},
+            </if>
+            <if test="number != null and number != '' " >
+                number = #{number},
+            </if>
+            <if test="people_count != null and people_count != '' " >
+                people_count = #{people_count},
+            </if>
+            <if test="dorm_towerId != null and dorm_towerId != '' " >
+                dorm_towerId = #{dorm_towerId},
+            </if>
+            <if test="score != null and score != '' " >
+                score = #{score},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delDorm" parameterType="int">
+        DELETE FROM dorm WHERE id=#{id}
+    </delete>
+
+    <!--通过id查询单挑数据-->
+    <select id="selDormByName" parameterType="java.lang.String" resultType="Dorm">
+        SELECT * FROM dorm
+        where
+        name = #{name}
+    </select>
+
+    <select id="selDormByNumber" parameterType="java.lang.String" resultType="Dorm">
+        SELECT * FROM dorm
+        where
+        number = #{number}
+    </select>
+
+    <!--查询-->
+    <select id="findDormByDorm_towerId" resultType="Dorm" parameterType="java.lang.Integer">
+        SELECT * FROM dorm where dorm_towerId=#{dorm_towerId}
+    </select>
+
+
+    <!--添加关联表-->
+    <insert id="insertDorm_usersId" parameterType="Dorm_usersId" >
+        INSERT INTO dorm_usersid(dormId,usersId,dorm_towerId)
+        VALUES (#{dormId},#{usersId},#{dorm_towerId})
+    </insert>
+
+    <!--查询-->
+    <select id="findDorm_usersId" resultType="Dorm_usersId" parameterType="java.lang.Integer">
+        SELECT * FROM dorm_usersid where dormId=#{dormId}
+    </select>
+
+    <select id="findDorm_usersIdByUId" resultType="Dorm_usersId" parameterType="java.lang.Integer">
+        SELECT * FROM dorm_usersid where usersId=#{usersId}
+    </select>
+
+    <update id="updDorm_usersIdByUId" parameterType="UserIdusId" >
+      update dorm_usersid set usersId=#{usId} where id=#{usersId}
+    </update>
+
+
+    <!-- 删除 -->
+    <delete id="delDorm_usersId" parameterType="int">
+        DELETE FROM dorm_usersid WHERE id=#{id}
+    </delete>
+
+    <delete id="delDorm_usersByUsersId" parameterType="int">
+        DELETE FROM dorm_usersid WHERE usersId=#{usersId}
+    </delete>
+
+</mapper>

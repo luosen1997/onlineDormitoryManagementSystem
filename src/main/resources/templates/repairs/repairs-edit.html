@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="head::header" ></head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                	<input type="hidden" name="id" th:value="${repairs.id}" >
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>物品</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="article" th:value="${repairs.article}" name="article" required="required"  autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                        <span class="x-red">*</span>原因</label>
+                        <div class="layui-input-inline">
+                            <textarea th:placeholder="${repairs.cause}" class="layui-textarea" name="cause" id="cause" ></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <button class="layui-btn" lay-filter="edit" lay-submit="">编辑</button></div>
+                </form>
+            </div>
+        </div>
+        <script>
+        	layui.use(['form', 'layer','jquery'],function() {
+                $ = layui.jquery;
+                var form = layui.form,layer = layui.layer;
+                //监听提交
+                form.on('submit(edit)',function(data) {
+                    $.ajax({
+	                    	url:"updRepairs",
+	                    	data:{id:data.field.id,
+                                article:data.field.article,
+                                cause:data.field.cause
+                            },
+	                    	success:function(res){
+	                    		//console.log(res);
+	                    		if(res.code == 0){
+	                    			layer.msg('已编辑!',{icon:1,time:1000},function(){
+			              				// 获得frame索引
+				                        var index = parent.layer.getFrameIndex(window.name);
+				                        //关闭当前frame
+				                        parent.layer.close(index);
+				                        parent.location.reload();
+		              				});
+	                    		}else{
+		              				layer.msg('编辑失败!',{icon:5,time:1000});
+		              			}
+	                    	},
+		              		error:function(err){
+		              			layer.msg('编辑失败!',{icon:5,time:1000});
+		              		}
+	                    	
+	                    })
+                    return false;
+                });
+
+            });
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="head::header" ></head>
+    
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form" >
+                	<input type="hidden" id="id" name="id" th:value="${admin.id}" autocomplete="off" class="layui-input">
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>信息</label>
+                        <div class="layui-input-block">
+                        	<textarea name="text" required  lay-verify="required" class="layui-textarea">[[${admin.text}]]</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>联系电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="tel" name="tel" th:value="${admin.tel}" lay-verify="phone" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="addr" name="addr" th:value="${admin.addr}" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>描述</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="remark" name="remark" th:value="${admin.remark}" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    </div>
+			        <div class="layui-form-item">
+			            <label for="L_repass" class="layui-form-label"></label>
+			            <button class="layui-btn" lay-filter="upd" lay-submit="">编辑</button></div>
+	        	</form>
+	        </div>
+        </div>
+        <script>
+        	layui.config({
+			    base: 'js/' //你存放新模块的目录，注意，不是layui的模块目录
+		  	}).use(['form','upload','layer'], function() {
+				var form = layui.form,upload = layui.upload,layer = layui.layer;
+
+                
+                //监听提交
+                form.on('submit(upd)',
+	                function(data) {
+	                	var param = {};
+	                	param.id=data.field.id;
+                		param.text=data.field.text;
+                		param.tel=data.field.tel;
+                		param.addr=data.field.addr;
+                		param.remark=data.field.remark;
+	                    $.ajax({
+	                    	url:"upd",
+	                    	data:param,
+	                    	success:function(res){
+	                    		//console.log(res);
+	                    		if(res.code == 0){
+	                    			layer.msg('已编辑!',{icon:1,time:1000},function(){
+			              				// 获得frame索引
+				                        var index = parent.layer.getFrameIndex(window.name);
+				                        //关闭当前frame
+				                        parent.layer.close(index);
+				                        parent.location.reload();
+		              				});
+	                    		}else{
+		              				layer.msg('编辑失败!',{icon:5,time:1000});
+		              			}
+	                    	},
+		              		error:function(err){
+		              			layer.msg('编辑失败!',{icon:5,time:1000});
+		              		}
+	                    	
+	                    })
+	                    
+	                    return false;
+	                });
+
+            });
+        </script>
+    
+    </body>
+
+</html>

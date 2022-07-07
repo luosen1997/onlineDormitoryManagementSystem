@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.net.mapper.NoticeMapper">
+    <!--查询公告列表-->
+    <select id="selAllNotice" parameterType="Map" resultType="Notice">
+        SELECT * FROM notice
+        <where> 1= 1
+            <if test="title != null">
+                AND  title LIKE CONCAT("%",#{title},"%")
+            </if>
+            <if test="content != null">
+                AND  content LIKE CONCAT("%",#{content},"%")
+            </if>
+            <if test="begin_date!=null and begin_date!=''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d') &gt;= #{begin_date}
+            </if>
+            <if test="end_date!=null and end_date!=''">
+                and DATE_FORMAT(create_time, '%Y-%m-%d') &lt;= #{end_date}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        <if test = "begin !=null and last !=null" >
+            LIMIT #{begin},#{last}
+        </if>
+    </select>
+    <!--添加公告-->
+    <insert id="addNotice" parameterType="Notice" >
+        INSERT INTO notice(title,content,create_time)
+        VALUES (#{title},#{content},now())
+    </insert>
+    <!--通过id查询单挑数据-->
+    <select id="selNoticeId" parameterType="int" resultType="Notice">
+        SELECT * FROM notice where id=#{id}
+    </select>
+
+    <update id="updNotice" parameterType="Notice">
+        UPDATE notice
+        <set >
+            create_time = now(),
+            <if test="title != null and title != '' " >
+                title = #{title},
+            </if>
+            <if test="content != null and content != '' " >
+                content = #{content},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delNotice" parameterType="int">
+        DELETE FROM notice WHERE id=#{id}
+    </delete>
+    <!--查询前台公告最新5条数据-->
+    <select id="selNoticeByFive" resultType="Notice">
+        SELECT * FROM notice order by create_time desc limit 5
+    </select>
+</mapper>

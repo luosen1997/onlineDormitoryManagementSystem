@@ -1,0 +1,22 @@
+<div class="page" th:fragment="page" >
+  	<div>
+  		<a class="prev" th:onclick="page([[${pageBean.currPageNo-1}]])" th:if="${pageBean.currPageNo > 1}">&lt;&lt;</a>
+  		<a class="num" th:if="${pageBean.currPageNo>3}">...</a>
+  		<a class="num" th:if="${pageBean.currPageNo>3 && pageBean.totalPageCount == pageBean.currPageNo}" th:onclick="page([[${pageBean.currPageNo-4}]])" th:text="${pageBean.currPageNo-4}"></a>
+  		<a class="num" th:if="${pageBean.currPageNo>3 && pageBean.totalPageCount == pageBean.currPageNo}" th:onclick="page([[${pageBean.currPageNo-3}]])" th:text="${pageBean.currPageNo-3}"></a>
+  		<a class="num" th:if="${pageBean.currPageNo>3 && pageBean.totalPageCount - pageBean.currPageNo == 1 }" th:onclick="page([[${pageBean.currPageNo-3}]])" th:text="${pageBean.currPageNo-3}"></a>
+  		
+  		<a class="num" th:if="${pageBean.currPageNo>2}" th:onclick="page([[${pageBean.currPageNo-2}]])" th:text="${pageBean.currPageNo-2}"></a>
+  		<a class="num" th:if="${pageBean.currPageNo>1}" th:onclick="page([[${pageBean.currPageNo-1}]])" th:text="${pageBean.currPageNo-1}"></a>
+  		
+  		<span class="current" th:onclick="page([[${pageBean.currPageNo}]])" th:text="${pageBean.currPageNo}" ></span>
+  		
+  		<a class="num" th:if="${pageBean.currPageNo+1<= pageBean.totalPageCount}" th:onclick="page([[${pageBean.currPageNo+1}]])" th:text="${pageBean.currPageNo+1}"></a>
+  		<a class="num" th:if="${pageBean.currPageNo+2<= pageBean.totalPageCount}" th:onclick="page([[${pageBean.currPageNo+2}]])" th:text="${pageBean.currPageNo+2}"></a>
+  		
+  		<a class="num" th:if="${pageBean.currPageNo+3<= pageBean.totalPageCount && pageBean.currPageNo < 3}" th:onclick="page([[${pageBean.currPageNo+3}]])" th:text="${pageBean.currPageNo+3}"></a>
+  		<a class="num" th:if="${pageBean.currPageNo+4<= pageBean.totalPageCount && pageBean.currPageNo < 2}" th:onclick="page([[${pageBean.currPageNo+4}]])" th:text="${pageBean.currPageNo+4}"></a>
+  		<a class="num" th:if="${pageBean.currPageNo>=3 && pageBean.currPageNo<pageBean.totalPageCount-2}">...</a>
+  		<a class="next" th:onclick="page([[${pageBean.currPageNo+1}]])" th:if="${pageBean.currPageNo<pageBean.totalPageCount}">&gt;&gt;</a>
+  	</div>
+</div>

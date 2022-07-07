@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="head::header" ></head>
+    <body>
+        <div class="x-nav">
+          	<span class="layui-breadcrumb">
+	            <a href="#">首页</a>
+	            <a href="#">调换宿舍管理</a>
+	            <a><cite>调换宿舍列表</cite></a>
+          	</span>
+          	<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" 
+          	onclick="location.reload()" title="刷新">
+            	<i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <form class="layui-form layui-col-space5" action="list">
+                                <input type="hidden" value="" name="pageIndex" id="pageIndex"/>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input class="layui-input"  autocomplete="off" placeholder="开始日" name="begin_date" id="start" th:value="${begin_date}">
+                                </div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input class="layui-input"  autocomplete="off" placeholder="截止日" name="end_date" id="end" th:value="${end_date}">
+                                </div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input type="text" name="article" th:value="${article}"  placeholder="请输入物品名" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <select name="sex" >
+                                        <option value="" th:selected="${state == ''}">全部</option>
+                                        <option value="1" th:selected="${state == '1'}">成功</option>
+                                        <option value="2" th:selected="${state == '2'}">失败</option>
+                                    </select>
+                                </div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <button class="layui-btn sreach"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-card-body layui-table-body layui-table-main">
+                            <table class="layui-table layui-form">
+                                <thead>
+                                  	<tr>
+	                                    <th>ID</th>
+	                                    <th>申请人</th>
+                                        <th>受邀人</th>
+                                        <th>是否同意</th>
+                                        <th>是否通过</th>
+                                        <th>创建时间</th>
+                                	</tr>
+                                </thead>
+                                <tbody >
+                                  	<tr th:each="type,item : ${list}">
+	                                    <td>[[${type.id}]]</td>
+	                                    <td>[[${type.nickname}]]</td>
+                                        <td>[[${type.nicknames}]]</td>
+                                        <td>
+                                            <div class="layui-card-header" th:if="${type.agree == 0 && type.otherId == users.id} ">
+                                                <a href="javascript:;">
+                                                    <button class="layui-btn" th:onclick="|javascript:upd('${type.id}',1)|"><i class="layui-icon"></i>是</button>
+                                                </a>
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.agree == 0 && type.otherId == users.id } ">
+                                                <a href="javascript:;">
+                                                    <button class="layui-btn" th:onclick="|javascript:upd('${type.id}',2)|"><i class="layui-icon"></i>否</button>
+                                                </a>
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.agree == 0 && type.otherId != users.id } ">
+                                                未审核
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.agree == 1 } ">
+                                                同意
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.agree == 2 } ">
+                                                不同意
+                                            </div>
+                                        </td>
+                                        <td class="td-manage">
+                                            <div class="layui-card-header" th:if="${type.state == 0 && users.role == '0' && type.agree == 1 }">
+                                                <a href="javascript:;">
+                                                    <button class="layui-btn" th:onclick="|javascript:upd1('${type.id}',1,'${type.usId}','${type.otherId}')|"><i class="layui-icon"></i>通过</button>
+                                                </a>
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.state == 0 && users.role == '0' && type.agree == 1 }">
+                                                <a href="javascript:;">
+                                                    <button class="layui-btn" th:onclick="|javascript:upd1('${type.id}',2,'${type.usId}','${type.otherId}')|"><i class="layui-icon"></i>不通过</button>
+                                                </a>
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.state == 0 && users.role != '0' } ">
+                                                未审核
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.state == 0 && users.role == '0' && type.agree != 1} ">
+                                                未同意
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.state == 1  } ">
+                                                通过
+                                            </div>
+                                            <div class="layui-card-header" th:if="${type.state == 2 } ">
+                                                未通过
+                                            </div>
+                                        </td>
+                                        <td>
+                                            [[${type.create_time}]]
+                                        </td>
+                                  	</tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="layui-card-body ">
+                        	<div  th:replace="page::page"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </body>
+    <script>
+        layui.use(['laydate', 'form'],function() {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+        });
+
+        function upd(id,agree){
+            layer.confirm('确认要修改吗？',function(index){
+                $.ajax({
+                    url:'updExchange',
+                    data:{id:id,
+                        agree:agree
+                    },
+                    success:function(res){
+                        if(res.code == 0){
+                            layer.msg('已修改!',{icon:1,time:1000},function(){
+                                location.reload()
+                            });
+                        }else{
+                            layer.msg('修改失败!',{icon:5,time:1000});
+                        }
+                    },
+                    error:function(err){
+                        layer.msg(err,{icon:1,time:1000},function(){
+                            location.reload()
+                        });
+                    }
+                })
+
+            });
+        }
+
+        function upd1(id,state,usId,otherId){
+            layer.confirm('确认要修改吗？',function(index){
+                $.ajax({
+                    url:'updExchange',
+                    data:{id:id,
+                        state:state,
+                        usId:usId,
+                        otherId:otherId
+                    },
+                    success:function(res){
+                        if(res.code == 0){
+                            layer.msg('已修改!',{icon:1,time:1000},function(){
+                                location.reload()
+                            });
+                        }else{
+                            layer.msg('修改失败!',{icon:5,time:1000});
+                        }
+                    },
+                    error:function(err){
+                        layer.msg(err,{icon:1,time:1000},function(){
+                            location.reload()
+                        });
+                    }
+                })
+
+            });
+        }
+    </script>
+</html>

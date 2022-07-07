@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+    
+    <head th:replace="head::header" ></head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                	<input type="hidden" name="id" th:value="${users.id}"  autocomplete="off" class="layui-input">
+                  	<div class="layui-form-item">
+	                      <label class="layui-form-label">
+	                          <span class="x-red">*</span>登录名
+	                      </label>
+	                      <div class="layui-input-inline">
+	                          <input type="text" name="name" th:value="${users.name}" lay-verify="required" readonly="readonly"
+	                          autocomplete="off" class="layui-input">
+	                      </div>
+	                      <div class="layui-form-mid layui-word-aux">
+	                          <span class="x-red">*</span>登录名不能被修改
+	                      </div>
+	                  </div>
+
+                    <div class="layui-form-item" th:if="${userss.role == '0' }">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>照片</label>
+                        <div class="layui-input-inline">
+                            <img th:src="${users.photo}" width="60px" height="60px" id="photo" />
+                            <div class="layui-inline">
+                                <button type="button" class="layui-btn" id="choose">选择图片</button>
+                                <button type="button" class="layui-btn" id="uploadbtn">上传图片</button>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="layui-form-item" th:if="${userss.role != '2' }">
+                      <label class="layui-form-label">
+                          <span class="x-red">*</span>真实姓名
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" name="nickname" th:value="${users.nickname}" lay-verify="required"
+                          autocomplete="off" class="layui-input">
+                      </div>
+                  </div>
+                  <div class="layui-form-item" th:if="${userss.role != '2' }">
+                      <label class="layui-form-label">
+                          <span class="x-red">*</span>性别
+                      </label>
+                      <div class="layui-input-inline">
+                      		<input type="radio" name="sex" value="1" title="男" th:checked="${users.sex == 1}">
+      						<input type="radio" name="sex" value="2" title="女"  th:checked="${users.sex == 2}">
+                      </div>
+                  </div>
+                  <div class="layui-form-item" th:if="${userss.role == '2' }">
+                      <label class="layui-form-label">
+                          <span class="x-red">*</span>联系电话
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" name="tel" th:value="${users.tel}" lay-verify="phone"
+                          autocomplete="off" class="layui-input">
+                      </div>
+                  </div>
+                  <div class="layui-form-item" th:if="${userss.role != '2' }">
+                      <label class="layui-form-label">
+                          <span class="x-red">*</span>邮箱
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" name="email" th:value="${users.email}" lay-verify="email"
+                          autocomplete="off" class="layui-input">
+                      </div>
+                  </div>
+                  <div class="layui-form-item" th:if="${userss.role != '2' }">
+                      <label for="L_pass" class="layui-form-label">
+                          <span class="x-red">*</span>密码
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="password" id="L_pass" name="pass" th:value="${users.pwd}" lay-verify="pass"
+                          autocomplete="off" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+                  </div>
+                  <div class="layui-form-item" th:if="${userss.role != '2' }">
+                      <label for="L_repass" class="layui-form-label">
+                          <span class="x-red">*</span>确认密码
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="password" id="L_repass" name="repass" th:value="${users.pwd}" lay-verify="repass"
+                          autocomplete="off" class="layui-input">
+                      </div>
+                  </div>
+                    <div class="layui-form-item" th:if="${userss.role == '2' }">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>院校
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="academy" th:value="${users.academy}" lay-verify="academy"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" th:if="${userss.role == '2' }">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>班级
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="class_grade" th:value="${users.class_grade}" lay-verify="class_grade"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" th:if="${userss.role != '2' }">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>生源地
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="birthplace" th:value="${users.birthplace}" lay-verify="birthplace"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" th:if="${userss.role == '2' }">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>是否吸烟
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="smoke" value="1" title="是" th:checked="${users.smoke == 1}">
+                            <input type="radio" name="smoke" value="2" title="否"  th:checked="${users.smoke == 2}">
+                        </div>
+                    </div>
+                  <div class="layui-form-item">
+                      <label for="L_repass" class="layui-form-label">
+                      </label>
+                      <button  class="layui-btn" lay-filter="upd" lay-submit="">编辑</button>
+                  </div>
+              </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer','upload'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer, upload = layui.upload;
+
+                //上传
+                var ico = "";
+                upload.render({
+                    elem: '#choose'
+                    ,url: 'upload'
+                    ,auto: false
+                    ,bindAction: '#uploadbtn'
+                    ,accept: 'images'
+                    ,done: function(res){
+                        //上传完毕回调
+                        if(res.code == 0){
+                            ico = res.data;
+                            $("#photo").attr("src",res.data);
+                            layer.msg("上传图片成功！");
+                        }
+                    }
+                    ,error: function(err){
+                        //请求异常回调
+                        console.log(err);
+                        layer.msg("上传图片异常！");
+                    }
+                });
+
+                //自定义验证规则
+                form.verify({
+                    nikename: function(value) {
+                        if (value.length < 5) {
+                            return '昵称至少得5个字符啊';
+                        }
+                    },
+                    pass: [/(.+){6,12}$/, '密码必须6到12位'],
+                    repass: function(value) {
+                        if ($('#L_pass').val() != $('#L_repass').val()) {
+                            return '两次密码不一致';
+                        }
+                    }
+                });
+
+              	//监听提交
+                form.on('submit(upd)',
+                function(data) {
+                	
+                    $.ajax({
+                    	url:"edit",
+                    	data:{
+                    		id:data.field.id,
+                    		nickname:data.field.nickname,
+                    		name:data.field.name,
+                    		pwd:data.field.pass,
+                    		tel:data.field.tel,
+                    		sex:data.field.sex,
+                    		email:data.field.email,
+                            academy:data.field.academy,
+                            class_grade:data.field.class_grade,
+                            birthplace:data.field.birthplace,
+                            smoke:data.field.smoke,
+                            photo:$("#photo").attr("src")
+                    	},
+                    	success:function(res){
+                    		if(res.code == 0){
+                    			layer.msg('已更新!',{icon:1,time:1000},function(){
+		              				// 获得frame索引
+			                        var index = parent.layer.getFrameIndex(window.name);
+			                        //关闭当前frame
+			                        parent.layer.close(index);
+			                        parent.location.reload();
+	              				});
+                    		}else{
+	              				layer.msg(res.msg,{icon:5,time:1000});
+	              			}
+                    	},
+	              		error:function(err){
+	              			layer.msg('更新失败!',{icon:5,time:1000});
+	              		}
+                    	
+                    })
+                    return false;
+                });
+
+            });
+       	</script>
+    </body>
+
+</html>
